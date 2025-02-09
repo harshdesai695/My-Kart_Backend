@@ -34,7 +34,7 @@ public class ProductService {
 		return "Added";
 	}
 
-
+	@Cacheable(value = "product")
 	public Product getProduct(String productId) throws Exception{
 		Product product;
 		try {
@@ -48,6 +48,7 @@ public class ProductService {
 		return product;
 	}
 	
+	@Cacheable(value = "productAll")
 	public List<Product> getAllProduct() throws Exception{
 		List<Product> productList;
 		try {
@@ -58,6 +59,7 @@ public class ProductService {
 		return productList;
 	}
 	
+	@Cacheable(value = "productRandom")
 	public List<Product> getRandomProduct() throws Exception{
 		List<Product> productList;
 		try {
@@ -72,6 +74,7 @@ public class ProductService {
 		}
 		return productList;
 	}
+
 	@Cacheable(value = "productsByBrand", key = "#brandName")
 	public List<Product> getProductByBrandName(String brandName)throws Exception{
 		List<Product> productList;
