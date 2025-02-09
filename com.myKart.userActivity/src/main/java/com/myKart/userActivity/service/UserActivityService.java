@@ -7,6 +7,7 @@ import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -33,7 +34,8 @@ public class UserActivityService {
 		}
 		return "Added";
 	}
-
+	
+	@Cacheable(value = "getUserActivity")
 	public UserActivity getUserActivity(String userId) throws Exception {
 		UserActivity userActivity;
 		try {
@@ -46,7 +48,8 @@ public class UserActivityService {
 		}
 		return userActivity;
 	}
-
+	
+	@Cacheable(value = "getWishList")
 	public List<String> getWishList(String userId) throws Exception {
 		List<String> wishList;
 		try {
@@ -59,7 +62,8 @@ public class UserActivityService {
 		}
 		return wishList;
 	}
-
+	
+	@Cacheable(value = "getCartList")
 	public List<String> getCartList(String userId) throws Exception {
 		List<String> cardList;
 		try {
@@ -69,7 +73,8 @@ public class UserActivityService {
 		}
 		return cardList;
 	}
-
+	
+	@Cacheable(value = "getOrderList")
 	public List<String> getOrderList(String userId) throws Exception {
 		List<String> orderList;
 		try {
