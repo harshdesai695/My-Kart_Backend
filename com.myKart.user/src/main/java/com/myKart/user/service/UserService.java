@@ -3,6 +3,7 @@ package com.myKart.user.service;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -53,6 +54,7 @@ public class UserService {
 	}
 	
 	//Get User By ID
+	@Cacheable(value = "getUserById",key="#userId")
 	public User getUserById(String userId) throws Exception{
 		User user;
 		try {

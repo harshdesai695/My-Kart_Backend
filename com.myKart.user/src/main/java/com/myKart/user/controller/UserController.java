@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myKart.infra.constant.Constants;
 import com.myKart.infra.dto.RequestWrapper;
 import com.myKart.infra.dto.ResponseWrapper;
@@ -35,8 +36,11 @@ public class UserController {
 		ResponseWrapper responseWrapper = new ResponseWrapper();
 		try {
 			LOGGER.info("Incoming Request:"+request.toString());
-//			JSONObject requestObject = new JSONObject(request);
-			String response = userService.addUser((User)request.getRequestBody());
+			JSONObject requestObject = new JSONObject(request);
+			ObjectMapper objectMapper = new ObjectMapper();
+			String requestBody=requestObject.get("requestBody").toString();
+			User user = objectMapper.readValue(requestBody, User.class);
+			String response = userService.addUser(user);
 			responseWrapper.setResponseBody(response);
 			responseWrapper.setResponseStatus(Constants.OK);
 		} catch (Exception e) {
