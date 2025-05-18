@@ -1,0 +1,7 @@
+.env
+.env.local
+.env.*
+target/
+pom.xml.tag
+pom.xml.backup
+*.versionsBackup
