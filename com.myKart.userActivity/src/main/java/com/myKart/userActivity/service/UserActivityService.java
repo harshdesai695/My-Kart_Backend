@@ -35,7 +35,7 @@ public class UserActivityService {
 		return "Added";
 	}
 	
-	@Cacheable(value = "getUserActivity")
+//	@Cacheable(value = "getUserActivity")
 	public UserActivity getUserActivity(String userId) throws Exception {
 		UserActivity userActivity;
 		try {
@@ -49,7 +49,7 @@ public class UserActivityService {
 		return userActivity;
 	}
 	
-	@Cacheable(value = "getWishList")
+//	@Cacheable(value = "getWishList")
 	public List<String> getWishList(String userId) throws Exception {
 		List<String> wishList;
 		try {
@@ -63,7 +63,7 @@ public class UserActivityService {
 		return wishList;
 	}
 	
-	@Cacheable(value = "getCartList")
+//	@Cacheable(value = "getCartList")
 	public List<String> getCartList(String userId) throws Exception {
 		List<String> cardList;
 		try {

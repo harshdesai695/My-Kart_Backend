@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="DEBUG">
     <Appenders>
-        <!-- File Appender with Daily Rotation -->
-        <RollingFile name="FileAppender" fileName="D:/logs/UserApplication.log"
-                     filePattern="D:/logs/UserApplication-%d{yyyy-MM-dd}.log">
+        <!-- Business Logs Appender -->
+        <RollingFile name="UserFileAppender"
+                     fileName="E:/Projects/Servers/logs/User.log"
+                     filePattern="E:/Projects/Servers/logs/User-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"/>
             <Policies>
-                <!-- Rotate log file every day at midnight -->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
-            <DefaultRolloverStrategy max="30"/> <!-- Keep 30 days of logs -->
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+
+        <!-- Spring Logs Appender -->
+        <RollingFile name="SpringFileAppender"
+                     fileName="E:/Projects/Servers/logs/UserSpringLogs.log"
+                     filePattern="E:/Projects/Servers/logs/UserSpringLogs-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
         </RollingFile>
 
         <!-- Console Appender -->
         <Console name="ConsoleAppender">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"/>
-        </Console>  
+        </Console>
     </Appenders>
 
     <Loggers>
-        <!-- Root logger configuration -->
-        <Root level="info">
-          <!-- <AppenderRef ref="FileAppender"/> -->  
+        <!-- Logger for your application/business logic -->
+        <Logger name="com.myKart" level="info" additivity="false">
+            <AppenderRef ref="UserFileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+
+        <!-- Logger for Spring framework -->
+        <Logger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="SpringFileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+
+        <!-- Root Logger (optional: fallback logs) -->
+        <Root level="warn">
             <AppenderRef ref="ConsoleAppender"/>
         </Root>
     </Loggers>

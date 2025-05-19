@@ -13,7 +13,12 @@ import org.springframework.cache.annotation.EnableCaching;
 public class ProductApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		final Logger LOGGER = LogManager.getLogger(ProductApplication.class);
+		
+		SpringApplication app = new SpringApplication(ProductApplication.class);
+		app.addInitializers(new RemoteConfigInitializer());
+        LOGGER.info("ProductApplication Config Loded");
+        app.run(args);
 		LOGGER.info("Product Application Starts");
-		SpringApplication.run(ProductApplication.class, args);
+//		SpringApplication.run(ProductApplication.class, args);
 	}
 }

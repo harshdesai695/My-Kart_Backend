@@ -14,8 +14,11 @@ public class UserActivityApplication extends SpringBootServletInitializer{
 
 	public static void main(String[] args) {
 		final Logger LOGGER = LogManager.getLogger(UserActivityApplication.class);
+		SpringApplication app = new SpringApplication(UserActivityApplication.class);
+		app.addInitializers(new RemoteConfigInitializer());
+		app.run(args);
 		LOGGER.info("UserActivityApplication Starts");
-		SpringApplication.run(UserActivityApplication.class, args);
+//		SpringApplication.run(UserActivityApplication.class, args);
 	}
 
 }

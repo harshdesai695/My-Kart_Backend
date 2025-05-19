@@ -10,7 +10,10 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 public class EurekaApplication extends SpringBootServletInitializer  {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EurekaApplication.class, args);
+		SpringApplication app = new SpringApplication(EurekaApplication.class);
+		app.addInitializers(new RemoteConfigInitializer());
+		app.run(args);
+//		SpringApplication.run(EurekaApplication.class, args);
 	}
 
 }

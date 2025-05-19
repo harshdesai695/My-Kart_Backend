@@ -90,6 +90,7 @@ public class UserController {
 			user = userService.getUserById(userId);
 			responseWrapper.setResponseBody(user);
 			responseWrapper.setResponseStatus(Constants.OK);
+			LOGGER.info("Response:"+responseWrapper.toString());
 		} catch(BussinessException e) {
 			LOGGER.info("BussinessException:"+e.getMessage());
 			responseWrapper.setResponseBody(e.getMessage());

@@ -12,9 +12,15 @@ import org.springframework.cache.annotation.EnableCaching;
 public class UserApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
+		
 		final Logger LOGGER = LogManager.getLogger(UserApplication.class);
+		SpringApplication app = new SpringApplication(UserApplication.class);
+        app.addInitializers(new RemoteConfigInitializer());
+        LOGGER.info("UserApplication Config Loded");
+        app.run(args);
+		
 		LOGGER.info("UserApplication Starts");
-		SpringApplication.run(UserApplication.class, args);
+//		SpringApplication.run(UserApplication.class, args);
 	}
 
 }

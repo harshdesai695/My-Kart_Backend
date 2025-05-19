@@ -34,7 +34,7 @@ public class ProductService {
 		return "Added";
 	}
 
-	@Cacheable(value = "product")
+//	@Cacheable(value = "product")
 	public Product getProduct(String productId) throws Exception{
 		Product product;
 		try {
