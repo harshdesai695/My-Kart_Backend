@@ -3,6 +3,9 @@ package com.myKart.user.dto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Document(collection="Users")
 public class User {
 	@Id
@@ -10,6 +13,8 @@ public class User {
 	private String userName;
 	private String email;
 	private String phoneNo;
+	
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 	private String createdAt;
 	private String imgUrl;

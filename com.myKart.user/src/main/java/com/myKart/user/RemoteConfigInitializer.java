@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class RemoteConfigInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 	final Logger LOGGER = LogManager.getLogger(RemoteConfigInitializer.class);
-    private static final String CONFIG_SERVICE_URL = "http://localhost:8080/config/User";
+    private static final String CONFIG_SERVICE_URL = "http://localhost:8001/config/User";
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
