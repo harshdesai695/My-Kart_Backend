@@ -51,6 +51,21 @@ public class ProductService {
             throw new Exception("Error while retrieving product: " + e.getMessage());
         }
     }
+    
+    public List<Product> getProductByBrandName(String brand) throws Exception {
+    	List<Product> products=null;
+        try {
+            products = productRepository.findByBrandNameContaining(brand);
+            if (products.isEmpty()) {
+                throw new BussinessException("No products found.");
+            }
+        } catch (BussinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new Exception("Error while retrieving products: " + e.getMessage());
+        }
+        return products;
+    } 
 
     @Transactional
     public String deleteProduct(String id) throws Exception {

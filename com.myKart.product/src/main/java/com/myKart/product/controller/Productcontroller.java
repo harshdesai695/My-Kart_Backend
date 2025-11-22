@@ -41,6 +41,13 @@ public class Productcontroller {
         Product product = productService.getProductById(id);
         return new ResponseEntity<>(new ApiResponse<>(product), HttpStatus.OK);
     }
+    
+    @GetMapping("/getProductByBrand/{brandName}")
+    public ResponseEntity<ApiResponse<List<Product>>> getProductByBrandName(@PathVariable String brandName) throws Exception {
+        LOGGER.info("Incoming request to get product with id: {}", brandName);
+        List<Product> product = productService.getProductByBrandName(brandName);
+        return new ResponseEntity<>(new ApiResponse<>(product), HttpStatus.OK);
+    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable String id) throws Exception {

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myKart.infra.exception.BussinessException;
 import com.myKart.user.dto.User;
 import com.myKart.user.repository.UserRepository;
+import com.myKart.user.util.JwtUtil;
 
 @Service
 public class UserService {
@@ -26,6 +27,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // Add New User
     public String addUser(User newUser) throws Exception {
@@ -35,7 +39,6 @@ public class UserService {
                 throw new BussinessException("Username already exists. Please choose a different one.");
             }
             newUser.setCreatedAt(new Date().toString());
-            // Encrypt the password before saving
             newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
             userRepository.save(newUser);
         } catch (BussinessException e) {
@@ -46,25 +49,46 @@ public class UserService {
         }
         return "User Added Successfully";
     }
-
-    // Get User Details for Login
-    public User login(String userName, String password) throws Exception {
+    
+    public String login(String userName, String password) throws Exception { // Change return type to String
         try {
             User user = userRepository.findByUserName(userName);
             if (user == null) {
                 throw new BussinessException("User Not Found");
             }
-            // Use the password encoder to check if the passwords match
+            
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new BussinessException("Invalid username or password");
             }
-            return user;
+            return jwtUtil.generateToken(user);
+
         } catch (BussinessException e) {
             throw e;
         } catch (Exception e) {
             throw new Exception("An error occurred during login: " + e.getMessage());
         }
     }
+    
+    
+    
+//    // Get User Details for Login
+//    public User login(String userName, String password) throws Exception {
+//        try {
+//            User user = userRepository.findByUserName(userName);
+//            if (user == null) {
+//                throw new BussinessException("User Not Found");
+//            }
+//            // Use the password encoder to check if the passwords match
+//            if (!passwordEncoder.matches(password, user.getPassword())) {
+//                throw new BussinessException("Invalid username or password");
+//            }
+//            return user;
+//        } catch (BussinessException e) {
+//            throw e;
+//        } catch (Exception e) {
+//            throw new Exception("An error occurred during login: " + e.getMessage());
+//        }
+//    }
 
     // Get User By ID
     @Cacheable(value = "getUserById", key = "#userId")

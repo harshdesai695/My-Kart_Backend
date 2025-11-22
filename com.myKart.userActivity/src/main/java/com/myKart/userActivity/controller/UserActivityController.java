@@ -1,10 +1,14 @@
 package com.myKart.userActivity.controller;
 
-import java.util.List;
+import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myKart.infra.constant.Constants;
 import com.myKart.infra.dto.RequestWrapper;
 import com.myKart.infra.dto.ResponseWrapper;
-import com.myKart.infra.exception.BussinessException;
+import com.myKart.userActivity.dto.ApiResponse;
 import com.myKart.userActivity.dto.UserActivity;
 import com.myKart.userActivity.service.UserActivityService;
 
@@ -26,6 +30,8 @@ public class UserActivityController {
 
 	@Autowired
 	UserActivityService userActivityService;
+	
+	private static final Logger LOGGER = LogManager.getLogger(UserActivityController.class);
 
 	// Endpoint To Add UserActivity (Orders,WishList,CartList)
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -51,177 +57,79 @@ public class UserActivityController {
 	// EndPoint to get UserActivity
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping(value = "/getUserActivity/{userId}")
-	public ResponseEntity<Object> getUserActivity(@PathVariable String userId) {
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-			UserActivity response = userActivityService.getUserActivity(userId);
-			responseWrapper.setResponseBody(response);
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (BussinessException e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.BUSSINESS_ERROR);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
+	public ResponseEntity<Object> getUserActivity(@PathVariable String userId) throws Exception {
+		LOGGER.info("Get call to retrieve user UserActivity for userId: " + userId);
+//		ResponseWrapper responseWrapper = new ResponseWrapper();
+		UserActivity response = userActivityService.getUserActivity(userId);
+		return new ResponseEntity(new ApiResponse<>(response),HttpStatus.OK);
 	}
 
-	// EndPoint To get WishList
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping(value = "/getWishList/{userId}")
-	public ResponseEntity<Object> getWishList(@PathVariable String userId) {
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-			List<String> response = userActivityService.getWishList(userId);
-			responseWrapper.setResponseBody(response.get(0));
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
-	}
+	@GetMapping("/getWishList/{userId}")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getWishList(@PathVariable String userId) throws Exception {
+        LOGGER.info("Request to get wishlist for user: {}", userId);
+        Map<String, Object> wishList = userActivityService.getWishList(userId);
+        return new ResponseEntity<>(new ApiResponse<>(wishList), HttpStatus.OK);
+    }
 
-	// EndPoint To get CartList
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping(value = "/getCartList/{userId}")
-	public ResponseEntity<Object> getCartList(@PathVariable String userId) {
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-			List<String> response = userActivityService.getCartList(userId);
-			responseWrapper.setResponseBody(response.get(0));
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
-	}
+    @GetMapping("/getCartList/{userId}")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getCartList(@PathVariable String userId) throws Exception {
+        LOGGER.info("Request to get cart for user: {}", userId);
+        Map<String, Object> cartList = userActivityService.getCartList(userId);
+        return new ResponseEntity<>(new ApiResponse<>(cartList), HttpStatus.OK);
+    }
 
-	// EndPoint To get OrderList
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping(value = "/getOrderList/{userId}")
-	public ResponseEntity<Object> getOrderList(@PathVariable String userId) {
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-			List<String> response = userActivityService.getOrderList(userId);
-			responseWrapper.setResponseBody(response.get(0));
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
-	}
-
+    @GetMapping("/orders/{userId}")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getOrderList(@PathVariable String userId) throws Exception {
+        LOGGER.info("Request to get orders for user: {}", userId);
+        Map<String, Object> orderList = userActivityService.getOrderList(userId);
+        return new ResponseEntity<>(new ApiResponse<>(orderList), HttpStatus.OK);
+    }
+    
+    
+    
 	// EndPoint to update WishList
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping(value = "/addWishList/{userId}/{productId}")
-	public ResponseEntity<Object> addToWishList(@PathVariable String userId, @PathVariable String productId) {
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-//			System.out.println("UserID:"+userId);
-//			System.out.println("productId:"+productId);
-			String response = userActivityService.addToWishList(userId, productId);
-			responseWrapper.setResponseBody(response);
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
-	}
+    @GetMapping("/addWishList/{userId}/{productId}")
+    public ResponseEntity<ApiResponse<String>> addToWishList(@PathVariable String userId, @PathVariable String productId) throws Exception {
+        LOGGER.info("Request to add productId: {} to wishlist for userId: {}", productId, userId);
+        String response = userActivityService.addToWishList(userId, productId);
+        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.CREATED);
+    }
 
-	// EndPoint to update OrderList
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping(value = "/addOrderList/{userId}/{productId}")
-	public ResponseEntity<Object> addToOrderList(@PathVariable String userId, @PathVariable String productId) {
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-			String response = userActivityService.addToOrderList(userId, productId);
-			responseWrapper.setResponseBody(response);
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
-	}
+    @GetMapping("/addCartList/{userId}/{productId}")
+    public ResponseEntity<ApiResponse<String>> addToCartList(@PathVariable String userId, @PathVariable String productId) throws Exception {
+        LOGGER.info("Request to add productId: {} to cart for userId: {}", productId, userId);
+        String response = userActivityService.addToCartList(userId, productId);
+        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.CREATED);
+    }
 
-	// EndPoint to update CartList
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping(value = "/addCartList/{userId}/{productId}")
-	public ResponseEntity<Object> addToCartList(@PathVariable String userId, @PathVariable String productId) {
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-			String response = userActivityService.addToCartList(userId, productId);
-			responseWrapper.setResponseBody(response);
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
-	}
-	
-	//Delete Item from WishList
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping(value = "/deleteWishList/{userId}/{productId}")
-	public ResponseEntity<Object> deleteFromWishList(@PathVariable String userId, @PathVariable String productId){
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-			String response = userActivityService.deleteFromWishList(userId, productId);
-			responseWrapper.setResponseBody(response);
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
-	}
-	
-	//Delete Item from WishList
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping(value = "/deleteCartList/{userId}/{productId}")
-	public ResponseEntity<Object> deleteFromCartList(@PathVariable String userId, @PathVariable String productId){
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-			String response = userActivityService.deleteFromCartList(userId, productId);
-			responseWrapper.setResponseBody(response);
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
-	}
-	
-	//Delete Item from WishList
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@GetMapping(value = "/deleteOrderList/{userId}/{productId}")
-	public ResponseEntity<Object> deleteFromOrderList(@PathVariable String userId, @PathVariable String productId){
-		ResponseWrapper responseWrapper = new ResponseWrapper();
-		try {
-			String response = userActivityService.deleteFromOrderList(userId, productId);
-			responseWrapper.setResponseBody(response);
-			responseWrapper.setResponseStatus(Constants.OK);
-		} catch (Exception e) {
-			responseWrapper.setResponseBody(e.getMessage());
-			responseWrapper.setResponseStatus(Constants.GENERIC_ERROR);
-		}
-		return new ResponseEntity(responseWrapper.getResponseBody(), responseWrapper.getHttpHeaders(),
-				responseWrapper.getResponseStatus());
-	}
+    @PostMapping("/orders/add/{userId}/{productId}")
+    public ResponseEntity<ApiResponse<String>> addToOrderList(@PathVariable String userId, @PathVariable String productId) throws Exception {
+        LOGGER.info("Request to add productId: {} to orders for userId: {}", productId, userId);
+        String response = userActivityService.addToOrderList(userId, productId);
+        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.CREATED);
+    }
+
+    // --- DELETE Endpoints (Using DELETE) ---
+    @DeleteMapping("/wishlist/delete/{userId}/{productId}")
+    public ResponseEntity<ApiResponse<String>> deleteFromWishList(@PathVariable String userId, @PathVariable String productId) throws Exception {
+        LOGGER.info("Request to delete productId: {} from wishlist for userId: {}", productId, userId);
+        String response = userActivityService.deleteFromWishList(userId, productId);
+        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/cart/delete/{userId}/{productId}")
+    public ResponseEntity<ApiResponse<String>> deleteFromCartList(@PathVariable String userId, @PathVariable String productId) throws Exception {
+        LOGGER.info("Request to delete productId: {} from cart for userId: {}", productId, userId);
+        String response = userActivityService.deleteFromCartList(userId, productId);
+        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/orders/delete/{userId}/{productId}")
+    public ResponseEntity<ApiResponse<String>> deleteFromOrderList(@PathVariable String userId, @PathVariable String productId) throws Exception {
+        LOGGER.info("Request to delete productId: {} from orders for userId: {}", productId, userId);
+        String response = userActivityService.deleteFromOrderList(userId, productId);
+        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.OK);
+    }
 	
 	
 }

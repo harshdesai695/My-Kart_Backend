@@ -1,6 +1,0 @@
-com\myKart\product\controller\Productcontroller.class
-com\myKart\product\ProductApplication.class
-com\myKart\product\repository\ProductRepository.class
-com\myKart\product\dto\Product.class
-com\myKart\product\CorsConfig.class
-com\myKart\product\service\ProductService.class

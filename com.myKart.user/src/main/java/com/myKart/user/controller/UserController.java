@@ -52,11 +52,22 @@ public class UserController {
      * @return A response entity with the logged-in user's details.
      */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<User>> loginUser(@RequestBody User loginRequest) throws Exception {
+    public ResponseEntity<ApiResponse<String>> loginUser(@RequestBody User loginRequest) throws Exception {
         LOGGER.info("Incoming login request for user: " + loginRequest.getUserName());
-        User loggedInUser = userService.login(loginRequest.getUserName(), loginRequest.getPassword());
-        return new ResponseEntity<>(new ApiResponse<>(loggedInUser), HttpStatus.OK);
+        
+        // This now returns a JWT string
+        String token = userService.login(loginRequest.getUserName(), loginRequest.getPassword()); 
+        
+        // Return the token in the ApiResponse
+        return new ResponseEntity<>(new ApiResponse<>(token), HttpStatus.OK); 
     }
+    
+//    @PostMapping("/login")
+//    public ResponseEntity<ApiResponse<User>> loginUser(@RequestBody User loginRequest) throws Exception {
+//        LOGGER.info("Incoming login request for user: " + loginRequest.getUserName());
+//        User loggedInUser = userService.login(loginRequest.getUserName(), loginRequest.getPassword());
+//        return new ResponseEntity<>(new ApiResponse<>(loggedInUser), HttpStatus.OK);
+//    }
 
     /**
      * Endpoint to get user details by user ID.
