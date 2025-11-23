@@ -48,6 +48,13 @@ public class Productcontroller {
         List<Product> product = productService.getProductByBrandName(brandName);
         return new ResponseEntity<>(new ApiResponse<>(product), HttpStatus.OK);
     }
+    
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<ApiResponse<List<Product>>> searchProducts(@PathVariable String keyword)throws Exception{
+    	 LOGGER.info("Incoming Search request to get product with Key: {}", keyword);
+    	 List<Product> product = productService.searchProducts(keyword);
+    	 return new ResponseEntity<>(new ApiResponse<>(product), HttpStatus.OK);
+    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<String>> deleteProduct(@PathVariable String id) throws Exception {

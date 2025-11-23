@@ -81,4 +81,19 @@ public class ProductService {
             throw new Exception("Error while deleting product: " + e.getMessage());
         }
     }
+    
+    @Transactional
+    public List<Product> searchProducts(String keyword) throws Exception {
+        try {
+            List<Product> productList = productRepository.searchProducts(keyword);
+            if (productList == null || productList.isEmpty()) {
+                throw new BussinessException("No products found matching: " + keyword);
+            }
+            return productList;
+        } catch (BussinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new Exception("Error searching products: " + e.getMessage());
+        }
+    }
 }

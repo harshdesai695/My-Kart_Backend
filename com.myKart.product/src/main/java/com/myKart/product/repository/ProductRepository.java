@@ -15,4 +15,12 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 //	List<Product> FindAll();
 	@Query("{ 'brandName': { $regex: ?0, $options: 'i' } }")
     List<Product> findByBrandNameContaining(String brandName);
+	
+	@Query("{ '$or': [ " +
+	           "{ 'productName': { $regex: ?0, $options: 'i' } }, " +
+	           "{ 'brandName': { $regex: ?0, $options: 'i' } }, " +
+	           "{ 'category': { $regex: ?0, $options: 'i' } }, " +
+	           "{ 'productDescription': { $regex: ?0, $options: 'i' } } " +
+	           "] }")
+	    List<Product> searchProducts(String keyword);
 }
